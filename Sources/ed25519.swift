@@ -36,13 +36,13 @@ public typealias byte = UInt8
 
 
 // GenerateKey generates a public/private key pair using a random array of 32 bytes
-func GenerateKey(_ rand32UInt8: [byte]) -> (publicKey: [byte], privateKey: [byte]) {
+public func GenerateKey(_ rand32UInt8: [byte]) -> (publicKey: [byte], privateKey: [byte]) {
 	let publicKey = MakePublicKey(rand32UInt8)
 	return (publicKey,rand32UInt8+publicKey)
 }
 
 // MakePublicKey makes a publicKey from the first half of privateKey.
-func MakePublicKey(_ privateKeySeed: [byte]) -> [byte] {
+public func MakePublicKey(_ privateKeySeed: [byte]) -> [byte] {
 	var publicKey  = [byte](repeating: 0, count: PublicKeySize)
 
   var digest = (Digest(using: .sha512).update(data: CryptoUtils.data(from: privateKeySeed))?.final())!
@@ -60,7 +60,7 @@ func MakePublicKey(_ privateKeySeed: [byte]) -> [byte] {
 }
 
 // Sign signs the message with privateKey and returns a signature.
-func Sign(_ privateKey: [byte], _ message: [byte]) -> [byte] {
+public func Sign(_ privateKey: [byte], _ message: [byte]) -> [byte] {
 	let privateKeySeed = Array(privateKey[0..<32])
   
   var digest1 = (Digest(using: .sha512).update(data: CryptoUtils.data(from: privateKeySeed))?.final())!
