@@ -15,7 +15,7 @@ let package = Package(
   name: "Ed25519",
   dependencies: [
     .Package(url: url, majorVersion: majorVersion, minor: minorVersion),
-    .Package(url: "https://github.com/IBM-Swift/BlueCryptor", majorVersion: 0, minor: 5),
+    .Package(url: "https://github.com/IBM-Swift/BlueCryptor", majorVersion: 0, minor: 2),
     ],
   exclude: ["Cryptor.xcodeproj", "README.md", "Sources/Info.plist"]
 )
