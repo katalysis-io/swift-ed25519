@@ -45,7 +45,7 @@ public func GenerateKey(_ rand32UInt8: [byte]) -> (publicKey: [byte], privateKey
 public func MakePublicKey(_ privateKeySeed: [byte]) -> [byte] {
 	var publicKey  = [byte](repeating: 0, count: PublicKeySize)
 
-  var digest = (Digest(using: .sha512).update(data: CryptoUtils.data(from: privateKeySeed))?.final())!
+  var digest = (Digest(using: .sha512).update(data: Data(CryptoUtils.data(from: privateKeySeed)))?.final())!
   
 	digest[0] &= 248
 	digest[31] &= 127
@@ -63,7 +63,7 @@ public func MakePublicKey(_ privateKeySeed: [byte]) -> [byte] {
 public func Sign(_ privateKey: [byte], _ message: [byte]) -> [byte] {
 	let privateKeySeed = Array(privateKey[0..<32])
   
-  var digest1 = (Digest(using: .sha512).update(data: CryptoUtils.data(from: privateKeySeed))?.final())!
+  var digest1 = (Digest(using: .sha512).update(data: Data(CryptoUtils.data(from: privateKeySeed)))?.final())!
 
   
 	var expandedSecretKey  = [byte](repeating: 0, count: 32)
@@ -76,7 +76,7 @@ public func Sign(_ privateKey: [byte], _ message: [byte]) -> [byte] {
 
   var data = Array(digest1[32..<64]) + message
 
-  let messageDigest = (Digest(using: .sha512).update(data: CryptoUtils.data(from: data))?.final())!
+  let messageDigest = (Digest(using: .sha512).update(data: Data(CryptoUtils.data(from: data)))?.final())!
 
   
 	var messageDigestReduced  = [byte](repeating: 0, count: 32)
@@ -89,7 +89,7 @@ public func Sign(_ privateKey: [byte], _ message: [byte]) -> [byte] {
 
   data = encodedR + Array(privateKey[32..<64]) + message
 
-  let hramDigest = (Digest(using: .sha512).update(data: CryptoUtils.data(from: data))?.final())!
+  let hramDigest = (Digest(using: .sha512).update(data: Data(CryptoUtils.data(from: data)))?.final())!
 
   
 	var hramDigestReduced  = [byte](repeating: 0, count: 32)
@@ -118,7 +118,7 @@ public func Verify(_ publicKey: [byte], _ message: [byte], _ sig: [byte]) -> Boo
 
   let data = Array(sig[0..<32]) + publicKey + message
 
-  let digest = (Digest(using: .sha512).update(data: CryptoUtils.data(from: data))?.final())!
+  let digest = (Digest(using: .sha512).update(data: Data(CryptoUtils.data(from: data)))?.final())!
   
 	var hReduced = [byte](repeating: 0, count: 32)
 	ScReduce(&hReduced, digest)
