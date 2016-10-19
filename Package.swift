@@ -1,5 +1,12 @@
 import PackageDescription
-
+#if os(Linux)
+let package = Package(
+  name: "Ed25519",
+  dependencies: [
+    .Package(url: "https://github.com/Zewo/OpenSSL", majorVersion: 0, minor: 14),
+    ]
+)
+#else
 let package = Package(
   name: "Ed25519",
   dependencies: [
@@ -7,3 +14,4 @@ let package = Package(
     ],
   exclude: ["Cryptor.xcodeproj", "README.md", "Sources/Info.plist"]
 )
+#endif

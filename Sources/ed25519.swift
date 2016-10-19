@@ -25,8 +25,11 @@
 // from SUPERCOP.
 
 import Foundation
+#if os(Linux)
+import OpenSSL
+#else
 import Cryptor
-
+#endif
 
 let PublicKeySize  = 32
 let PrivateKeySize = 64
@@ -45,7 +48,11 @@ public func GenerateKey(_ rand32UInt8: [byte]) -> (publicKey: [byte], privateKey
 public func MakePublicKey(_ privateKeySeed: [byte]) -> [byte] {
 	var publicKey  = [byte](repeating: 0, count: PublicKeySize)
 
+#if os(Linux)
+  var digest = Hash.hash(.sha512, message: Buffer(privateKeySeed)).bytes
+#else
   var digest = (Digest(using: .sha512).update(data: Data(CryptoUtils.data(from: privateKeySeed)))?.final())!
+#endif
   
 	digest[0] &= 248
 	digest[31] &= 127
@@ -63,8 +70,11 @@ public func MakePublicKey(_ privateKeySeed: [byte]) -> [byte] {
 public func Sign(_ privateKey: [byte], _ message: [byte]) -> [byte] {
 	let privateKeySeed = Array(privateKey[0..<32])
   
+#if os(Linux)
+  var digest1 = Hash.hash(.sha512, message: Buffer(privateKeySeed)).bytes
+#else
   var digest1 = (Digest(using: .sha512).update(data: Data(CryptoUtils.data(from: privateKeySeed)))?.final())!
-
+#endif
   
 	var expandedSecretKey  = [byte](repeating: 0, count: 32)
   
@@ -76,7 +86,11 @@ public func Sign(_ privateKey: [byte], _ message: [byte]) -> [byte] {
 
   var data = Array(digest1[32..<64]) + message
 
+#if os(Linux)
+  let messageDigest = Hash.hash(.sha512, message: Buffer(data)).bytes
+#else
   let messageDigest = (Digest(using: .sha512).update(data: Data(CryptoUtils.data(from: data)))?.final())!
+#endif
 
   
 	var messageDigestReduced  = [byte](repeating: 0, count: 32)
@@ -89,7 +103,11 @@ public func Sign(_ privateKey: [byte], _ message: [byte]) -> [byte] {
 
   data = encodedR + Array(privateKey[32..<64]) + message
 
+#if os(Linux)
+  let hramDigest = Hash.hash(.sha512, message: Buffer(data)).bytes
+#else
   let hramDigest = (Digest(using: .sha512).update(data: Data(CryptoUtils.data(from: data)))?.final())!
+#endif
 
   
 	var hramDigestReduced  = [byte](repeating: 0, count: 32)
@@ -118,7 +136,11 @@ public func Verify(_ publicKey: [byte], _ message: [byte], _ sig: [byte]) -> Boo
 
   let data = Array(sig[0..<32]) + publicKey + message
 
+#if os(Linux)
+  let digest = Hash.hash(.sha512, message: Buffer(data)).bytes
+#else
   let digest = (Digest(using: .sha512).update(data: Data(CryptoUtils.data(from: data)))?.final())!
+#endif
   
 	var hReduced = [byte](repeating: 0, count: 32)
 	ScReduce(&hReduced, digest)
