@@ -3,14 +3,14 @@ import PackageDescription
 let package = Package(
   name: "Ed25519",
   dependencies: [
-    .Package(url: "https://github.com/Zewo/OpenSSL", majorVersion: 0, minor: 14),
+    .Package(url: "https://github.com/Zewo/OpenSSL.git", majorVersion: 0, minor: 14),
     ]
 )
 #else
 let package = Package(
   name: "Ed25519",
   dependencies: [
-    .Package(url: "https://github.com/IBM-Swift/BlueCryptor", majorVersion: 0, minor: 7),
+    .Package(url: "https://github.com/IBM-Swift/BlueCryptor.git", majorVersion: 0, minor: 7),
     ],
   exclude: ["Cryptor.xcodeproj", "README.md", "Sources/Info.plist"]
 )
