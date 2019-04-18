@@ -1,4 +1,4 @@
-// swift-tools-version:4.0
+// swift-tools-version:5.0
 
 import PackageDescription
 
@@ -8,7 +8,7 @@ let package = Package(
     .library(name: "Ed25519", targets: ["Ed25519"])
     ],
   dependencies: [
-    .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git",  "0.8.0"..<"0.9.0"),
+    .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git",  .upToNextMinor(from: "1.0.0")),
     ],
   targets: [
     .target(name: "Ed25519", dependencies: ["CryptoSwift"], path: ".", sources: ["Sources"]),
