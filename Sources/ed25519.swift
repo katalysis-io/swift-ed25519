@@ -63,7 +63,7 @@ public func MakePublicKey(_ privateKeySeed: [byte]) -> [byte] {
 public func Sign(_ privateKey: [byte], _ message: [byte]) -> [byte] {
     let privateKeySeed = Array(privateKey[0..<32])
     
-    var digest1 = privateKeySeed.sha512()
+    let digest1 = privateKeySeed.sha512()
     
     var expandedSecretKey  = [byte](repeating: 0, count: 32)
     
