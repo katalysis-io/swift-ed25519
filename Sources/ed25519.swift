@@ -25,7 +25,7 @@
 // from SUPERCOP.
 
 import Foundation
-import CryptoSwift
+import CryptoKit
 
 
 let PublicKeySize  = 32
@@ -45,7 +45,7 @@ public func GenerateKey(_ rand32UInt8: [byte]) -> (publicKey: [byte], privateKey
 public func MakePublicKey(_ privateKeySeed: [byte]) -> [byte] {
     var publicKey  = [byte](repeating: 0, count: PublicKeySize)
     
-    var digest = privateKeySeed.sha512()
+    var digest = [UInt8](SHA512.hash(data: privateKeySeed))
     
     digest[0] &= 248
     digest[31] &= 127
@@ -63,7 +63,7 @@ public func MakePublicKey(_ privateKeySeed: [byte]) -> [byte] {
 public func Sign(_ privateKey: [byte], _ message: [byte]) -> [byte] {
     let privateKeySeed = Array(privateKey[0..<32])
     
-    let digest1 = privateKeySeed.sha512()
+    let digest1 = [UInt8](SHA512.hash(data: privateKeySeed))
     
     var expandedSecretKey  = [byte](repeating: 0, count: 32)
     
@@ -75,7 +75,7 @@ public func Sign(_ privateKey: [byte], _ message: [byte]) -> [byte] {
     
     var data = Array(digest1[32..<64]) + message
     
-    let messageDigest = data.sha512()
+    let messageDigest = [UInt8](SHA512.hash(data: data))
     
     var messageDigestReduced  = [byte](repeating: 0, count: 32)
     ScReduce(&messageDigestReduced, messageDigest)
@@ -87,7 +87,7 @@ public func Sign(_ privateKey: [byte], _ message: [byte]) -> [byte] {
     
     data = encodedR + Array(privateKey[32..<64]) + message
     
-    let hramDigest = data.sha512()
+    let hramDigest = [UInt8](SHA512.hash(data: data))
     
     var hramDigestReduced  = [byte](repeating: 0, count: 32)
     ScReduce(&hramDigestReduced, hramDigest)
@@ -115,7 +115,7 @@ public func Verify(_ publicKey: [byte], _ message: [byte], _ sig: [byte]) -> Boo
     
     let data = Array(sig[0..<32]) + publicKey + message
     
-    let digest = data.sha512()
+    let digest = [UInt8](SHA512.hash(data: data))
     
     var hReduced = [byte](repeating: 0, count: 32)
     ScReduce(&hReduced, digest)
