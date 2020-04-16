@@ -17,7 +17,7 @@ let package = Package(
     .package(url: "https://github.com/apple/swift-crypto.git", from: "1.0.0"),
 ],
   targets: [
-    .target(name: "Ed25519", dependencies: [.product(name: "Crypto", package: "swift-crypto")], path: ".", sources: ["Sources"]),
+    .target(name: "Ed25519", dependencies: [.product(name: "Crypto", package: "swift-crypto")]),
   ]
 )
 
